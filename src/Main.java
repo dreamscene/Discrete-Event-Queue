@@ -19,6 +19,7 @@ public class Main {
     //runtime and nextArrivaltime are in seconds
     double runTime = 0;
     double nextArrivalTime = exponentialRandom(interArrivalLambda);
+    double latestArrival = nextArrivalTime;
     
     //number of jobs refers to number of jobs completed
     int numberOfJobs = 0;
@@ -38,11 +39,14 @@ public class Main {
                 Job dummy = new Job(queue.getFirst().getServiceTime() - 0.005, queue.getLast().getEndTime());
                 queue.addLast(dummy);
                 queue.removeFirst();
-                numberOfJobs++;
             }
             else {
+            	runTime += queue.getFirst().getServiceTime();
                 queue.removeFirst();
                 numberOfJobs++;
+                //not entirely accurate as runTime is only updated when a job starts, not when it completes.
+                if (numberOfJobs % 1000 == 0)
+                	System.out.println("Time (in seconds) to complete " + numberOfJobs + " jobs: " + runTime);
             }     
         }
         
@@ -53,17 +57,20 @@ public class Main {
             //new job will trigger after the last job's service is complete
             if (!queue.isEmpty()){
                 newJob = new Job(serviceTime, queue.getLast().getEndTime());
+                nextArrivalTime = latestArrival + exponentialRandom(interArrivalLambda);
+                latestArrival = nextArrivalTime;
             }
             else {
                 newJob = new Job(serviceTime, runTime);
+                nextArrivalTime = runTime + exponentialRandom(interArrivalLambda);
+                latestArrival = nextArrivalTime;
             }
-            nextArrivalTime = runTime + exponentialRandom(interArrivalLambda);
+            
             queue.addLast(newJob);
         }
-        
-        //not entirely accurate as runTime is only updated when a job starts, not when it completes.
-        if (numberOfJobs % 1000 == 0) System.out.println("Time to complete " + numberOfJobs + " jobs: " + runTime);
     }
+    //print how many jobs finished in 100s
+    System.out.println("Total number of jobs completed in 100s: " + numberOfJobs);
   }
   
   public static double exponentialRandom(double lambda){

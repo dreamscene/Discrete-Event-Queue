@@ -5,6 +5,7 @@ public class Job {
   
   public Job(double serviceTime, double triggerTime){
       this.serviceTime = serviceTime;
+      this.triggerTime = triggerTime;
   }
   
   public double getServiceTime(){
