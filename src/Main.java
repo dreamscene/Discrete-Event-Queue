@@ -1,3 +1,10 @@
+/**
+Zaheen Ahmed, Jun Young Cheong
+
+A discrete-event simulation of a queue with a feedback loop. The service time and
+interarrival time is generated randomly with an exponential distribution.
+*/
+
 import java.util.Random;
 import java.util.LinkedList;
 import java.io.BufferedReader;
