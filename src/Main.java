@@ -47,11 +47,11 @@ public class Main {
                 queue.addLast(dummy);
                 queue.removeFirst();
             }
+            //job is complete
             else {
             	runTime += queue.getFirst().getServiceTime();
                 queue.removeFirst();
                 numberOfJobs++;
-                //not entirely accurate as runTime is only updated when a job starts, not when it completes.
                 if (numberOfJobs % 1000 == 0)
                 	System.out.println("Time (in seconds) to complete " + numberOfJobs + " jobs: " + runTime);
             }     
@@ -61,7 +61,6 @@ public class Main {
         if (queue.isEmpty() || nextArrivalTime <= queue.getFirst().getTriggerTime()){
             runTime = nextArrivalTime;
             serviceTime = exponentialRandom(serviceTimeLambda);
-            //new job will trigger after the last job's service is complete
             if (!queue.isEmpty()){
                 newJob = new Job(serviceTime, queue.getLast().getEndTime());
                 nextArrivalTime = latestArrival + exponentialRandom(interArrivalLambda);
@@ -72,7 +71,6 @@ public class Main {
                 nextArrivalTime = runTime + exponentialRandom(interArrivalLambda);
                 latestArrival = nextArrivalTime;
             }
-            
             queue.addLast(newJob);
         }
     }
@@ -81,6 +79,7 @@ public class Main {
   }
   
   public static double exponentialRandom(double lambda){
+      //generate random number using exponential distribution and given lambda
       return Math.log(1-rand.nextDouble())/(-lambda);
   }
 }
